@@ -32,8 +32,8 @@ To do:
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
-const char *ssid =   "A1-3c0661";
-const char *password =  "l24fq7ae3wyh";
+const char *ssid =   "xxxxxxxxx";
+const char *password =  "yyyyyyyy";
 
    // MQTT Broker
   // const char *mqtt_server = "broker.hivemq.com";
