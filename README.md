@@ -14,13 +14,5 @@ Relais JQC3F 5V DC
 Thermometer DHT22  
 EMXQ MQTT Broker  
 Mobile MQTT Client IoT MQTT (Android)  
-PC MQTT Client MQTT Explorer (Windows)  
+PC MQTT Client MQTT Explorer (Linux, Windows)  
 
-
-## Getting Started  
-Connect device as described in the wiring diagram 1.JPG.  
-Change your wifi parameters in the ESP8266 program termo_NAC_relais.ino.  
-Load the program to the ESP8266, check the wifi connection.  
-Test the function of the thermometer in monitor.  
-Test the wifi connection first local, then remote.  
-Use adapted index - anonym.php file to see results in a browser. 
