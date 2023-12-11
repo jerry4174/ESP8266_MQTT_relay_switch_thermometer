@@ -6,15 +6,15 @@ Remote measure of temperature and humidity and
 remote control of 4 relais with Message Queuing Telemetry Transport (MQTT).
 
 ## Purpose
-Remote switching of 4 electrical devices. Also you can switch on/off a heating. 
+Remote switching of 4 electrical devices.
 
 ## Built With  
 ESP8266  
 Relais JQC3F 5V DC  
 Thermometer DHT22  
-EMXQ MQTT Broker
-Mobile MQTT Client IoT MQTT (Android)
-PC MQTT Client MQTT Explorer (Windows)
+EMXQ MQTT Broker  
+Mobile MQTT Client IoT MQTT (Android)  
+PC MQTT Client MQTT Explorer (Windows)  
 
 
 ## Getting Started  
