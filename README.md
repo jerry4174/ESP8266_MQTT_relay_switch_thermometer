@@ -6,12 +6,16 @@ Remote measure of temperature and humidity and
 remote control of 4 relais with Message Queuing Telemetry Transport (MQTT).
 
 ## Purpose
-You have a second "summer" house. You can see in the net the temperature and humidity in a room. Also you can switch on/off a heating. 
+Remote switching of 4 electrical devices. Also you can switch on/off a heating. 
 
 ## Built With  
 ESP8266  
 Relais JQC3F 5V DC  
 Thermometer DHT22  
+EMXQ MQTT Broker
+Mobile MQTT Client IoT MQTT (Android)
+PC MQTT Client MQTT Explorer (Windows)
+
 
 ## Getting Started  
 Connect device as described in the wiring diagram 1.JPG.  
