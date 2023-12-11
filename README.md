@@ -1,8 +1,9 @@
 # ESP8266_MQTT_relay_switch
 MQTT Relay switch with ESP8266. Remote connection without static IP.
+
 ## Project Description
-Remote measure of temperature and humidity.  
-Remote control of an electrical device, e.g. infrared heating panel.
+Remote measure of temperature and humidity and  
+remote control of 4 relais with Message Queuing Telemetry Transport (MQTT).
 
 ## Purpose
 You have a second "summer" house. You can see in the net the temperature and humidity in a room. Also you can switch on/off a heating. 
