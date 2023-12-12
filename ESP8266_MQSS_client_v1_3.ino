@@ -135,7 +135,7 @@ if (strncmp((char*)payload, "rel6",length) == 0) {
 }
 // Relais 3 OFF   
 if (strncmp((char*)payload, "rel7",length) == 0) {
-   digitalWrite(PIN_REL_3, LOW);   off
+   digitalWrite(PIN_REL_3, LOW);
    client.publish(resp, "rel3 OFF");
    Serial.println("rel3 OFF");
 }
