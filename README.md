@@ -16,3 +16,7 @@ EMXQ MQTT Broker
 Mobile MQTT Client IoT MQTT (Android)  
 PC MQTT Client MQTT Explorer (Linux, Windows)  
 
+
+
+## License 
+Distributed under the MIT License. See https://en.wikipedia.org/wiki/MIT_License for more information.
