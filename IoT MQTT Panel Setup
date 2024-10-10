@@ -1,1 +1,16 @@
 
+1. Create a new connection to MQTT broker.
+2. Create a new Dashboard.
+3. Dashboard Configuration.
+4. Add all necessary panels.
+Example Relais 1:
+Panel Name: Relais 1
+Topic: Order
+Payload on: rel1
+Payload off: rel5
+x Use icon switch
+On Icon  green
+Off icon  red
+Icon size:  Medium
+QoS:  0
+
