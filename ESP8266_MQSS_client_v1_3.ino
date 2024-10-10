@@ -14,7 +14,7 @@ Preferences -> Additional Board Manager URLs: http://arduino.esp8266.com/stable/
 Libraries: PubSubClient by Nick O'Leary
 Serial Port: linux /dev/tty0, win COM6 (from Device Manager -> Ports COM & LPT -> USB to UART Bridge (COM6)) 
 Client mobile app IoT MQTT.
-broker.emqx.io, 1883 TCP, no user/passw, topics "order" and "resp"
+broker.emqx.io, 1883 TCP, user/passw, topics "order" and "resp"
 
 Problems: 
          - Serial Monitor wrong characters or no upload - try another usb cabel with data lines! ok
