@@ -3,7 +3,8 @@
 2. Create a new Dashboard.
 3. Dashboard Configuration.
 4. Add all necessary panels.
-Example Relais 1:
+
+Example panel Relais 1:
 Panel Name: Relais 1
 Topic: Order
 Payload on: rel1
