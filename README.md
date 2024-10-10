@@ -13,8 +13,8 @@ ESP8266
 Relais JQC3F 5V DC  
 Thermometer DHT22  
 EMXQ MQTT Broker  
-Mobile MQTT Client IoT MQTT (Android)  
-PC MQTT Client MQTT Explorer (Linux, Windows)  
+Mobile MQTT Client: IoT MQTT Panel (Android)  
+PC MQTT Client: MQTT Explorer (Linux, Windows)  
 
 
 
