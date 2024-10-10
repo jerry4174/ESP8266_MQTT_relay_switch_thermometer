@@ -20,6 +20,8 @@ Problems:
          - Serial Monitor wrong characters or no upload - try another usb cabel with data lines! ok
          - Many reconnects in the night (e.g. 190): The problem is MY wifi connection to the broker.
            Set router to wifi channel 11. Working well with wifi channel 11! Or reboot the router. ok
+         - Compile error D0, D1 not defined etc. Appears with board Generic ESP8266. 
+           Use NodeMCU 0.9 board in Boards Manager in Arduino IDE. ok
       
 
 To do:
