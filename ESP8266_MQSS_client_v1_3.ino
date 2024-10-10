@@ -28,191 +28,189 @@ To do:
 
 *****************************************/
 
-
 #include <ESP8266WiFi.h>
-#include <PubSubClient.h>
+#include <MQTT.h>
 
-const char *ssid =   "xxxxxxxxx";
-const char *password =  "yyyyyyyy";
 
-   // MQTT Broker
-  // const char *mqtt_server = "broker.hivemq.com";
-   const char *mqtt_server = "broker.emqx.io";
-   //const char *mqtt_server = "broker.mqtt-dashboard.com";
-   const int mqtt_port = 1883;
-   const char *topic =   "order";   // your topic for commands
-   const char *resp =   "resp";     // your topic for response
-   char val_str[20];
-   char id_str[40];
-   int value = 0;
-  
-   WiFiClient espClient;
-   PubSubClient client(espClient);
-   
-/**** LED Settings *******/
-#define PIN_REL_1         D1  
-#define PIN_REL_2         D2  
-#define PIN_REL_3         D3  
-#define PIN_REL_4         D5  // D4 didn't work
+#define AP_SSID     "xxxxxxxxxxxxxx"
+#define AP_PASSWORD "yyyyyyyyyyyyyy"  
 
-void setup_wifi() {
-  delay(10);
-  // We start by connecting to a WiFi network
+#define EIOTCLOUD_USERNAME "zzzzzzzzzzzz"
+#define EIOTCLOUD_PASSWORD "wwwwwwwwwwww"
+
+// create MQTT object
+#define EIOT_CLOUD_ADDRESS "c80cb52f163b4effb8b38abc3fbc0ef0.s1.eu.hivemq.cloud"
+
+#define DO_TOPIC        "/Sensor.Parameter1"
+
+#define PIN_DO_1         D0  // DO pin1 
+#define MODULE_ID_1     1
+
+
+#define PIN_DO_2         D1  // DO pin2 
+#define MODULE_ID_2     2
+
+
+#define PIN_DO_3         D2  // DO pin3 
+#define MODULE_ID_3     3
+
+
+#define PIN_DO_4         D3  // DO pin4 
+#define MODULE_ID_4     4
+
+
+MQTT myMqtt("", EIOT_CLOUD_ADDRESS, 8884);
+
+
+void setup() {
+  Serial.begin(115200);
+
+  WiFi.mode(WIFI_STA);  
+  WiFi.begin(AP_SSID, AP_PASSWORD);
+ 
+  Serial.println();
   Serial.println();
   Serial.print("Connecting to ");
-  Serial.println(ssid);
+  Serial.println(AP_SSID);
+    
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  };
 
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
+  Serial.println("WiFi connected");
+  Serial.println("Connecting to MQTT server");  
 
+  //set client id
+  // Generate client name based on MAC address and last 8 bits of microsecond counter
+  String clientName;
+  uint8_t mac[6];
+  WiFi.macAddress(mac);
+  clientName += macToStr(mac);
+  clientName += "-";
+  clientName += String(micros() & 0xff, 16);
+  myMqtt.setClientId((char*) clientName.c_str());
+
+  Serial.print("MQTT client id: ");
+  Serial.println(clientName);
+
+  // setup callbacks
+  myMqtt.onConnected(myConnectedCb);
+  myMqtt.onDisconnected(myDisconnectedCb);
+  myMqtt.onPublished(myPublishedCb);
+  myMqtt.onData(myDataCb);
+  
+  Serial.println("connect mqtt...");
+  myMqtt.setUserPwd(EIOTCLOUD_USERNAME, EIOTCLOUD_PASSWORD);  
+  myMqtt.connect();
+  int state = myMqtt.getState();
+  Serial.print("connect state: ");
+  Serial.println(state);
+
+  delay(500);
+
+  pinMode(PIN_DO_1, OUTPUT); 
+  pinMode(PIN_DO_2, OUTPUT); 
+  pinMode(PIN_DO_3, OUTPUT); 
+  pinMode(PIN_DO_4, OUTPUT); 
+
+  subscribe();
+}
+
+void loop() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-
-  randomSeed(micros());
-
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
-
 }
 
-void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("]: ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
+
+String macToStr(const uint8_t* mac)
+{
+  String result;
+  for (int i = 0; i < 6; ++i) {
+    result += String(mac[i], 16);
+    if (i < 5)
+      result += ':';
   }
-  Serial.println();
-  payload[length] = 0;        // convert payload to String
-  String recv_payload = String(( char *) payload);
-//  Serial.println(recv_payload );
-//  Serial.println();
-  
-// 4 relais switch on and off. On board LED lights, if any relais is ON.
-// Relais 1 ON
-if (strncmp((char*)payload, "rel1",length) == 0) {  
-   digitalWrite(PIN_REL_1, HIGH);
-   digitalWrite(BUILTIN_LED, LOW);   // Turn the on-board LED on
-   client.publish(resp, "rel1 ON");
-   Serial.println("rel1 ON");
-}
-// Relais 2 ON
-if (strncmp((char*)payload, "rel2",length) == 0) { 
-   digitalWrite(PIN_REL_2, HIGH); 
-   digitalWrite(BUILTIN_LED, LOW);   // Turn the on-board LED on
-   client.publish(resp, "rel2 ON");
-   Serial.println("rel2 ON");
-}
-// Relais 3 ON   
-if (strncmp((char*)payload, "rel3",length) == 0) { 
-     digitalWrite(PIN_REL_3, HIGH); 
-     digitalWrite(BUILTIN_LED, LOW);   // Turn the on-board LED on
-     client.publish(resp, "rel3 ON");
-     Serial.println("rel3 ON");
-}
-// Relais 4 ON
-if (strncmp((char*)payload, "rel4",length) == 0) { 
-     digitalWrite(PIN_REL_4, HIGH); 
-     digitalWrite(BUILTIN_LED, LOW);   // Turn the on-board LED on
-     client.publish(resp, "rel4 ON");
-     Serial.println("rel4 ON");
-} 
-// Relais 1 OFF
-if (strncmp((char*)payload, "rel5",length) == 0) {
-   digitalWrite(PIN_REL_1, LOW);
-   client.publish(resp, "rel1 OFF");
-   Serial.println("rel1 OFF");
-}
-// Relais 2 OFF
-if (strncmp((char*)payload, "rel6",length) == 0) {
-   digitalWrite(PIN_REL_2, LOW);    digitalWrite(BUILTIN_LED, LOW);   // Turn the on-board LED on
-   client.publish(resp, "rel2 OFF");
-   Serial.println("rel2 OFF");
-}
-// Relais 3 OFF   
-if (strncmp((char*)payload, "rel7",length) == 0) {
-   digitalWrite(PIN_REL_3, LOW);
-   client.publish(resp, "rel3 OFF");
-   Serial.println("rel3 OFF");
-}
-// Relais 4 OFF
-if (strncmp((char*)payload, "rel8",length) == 0) {
-   digitalWrite(PIN_REL_4, LOW);   
-  
-   client.publish(resp, "rel4 OFF");
-   Serial.println("rel4 OFF");
-} 
-// 1 or more PIN_REL are on (HIGH) BUILTIN_LED is on
-  if(digitalRead(PIN_REL_1) || digitalRead(PIN_REL_2) || digitalRead(PIN_REL_3) || digitalRead(PIN_REL_4) == HIGH) {
-    digitalWrite(BUILTIN_LED, LOW);   // Turn the on-board LED on
-      }
-  else  // all PIN_REL are off (LOW) BUILTIN_LED is off
-    digitalWrite(BUILTIN_LED, HIGH);  // Turn the on-board LED off;
+  return result;
 }
 
-void reconnect() {
-  // Loop until we're reconnected
-  value++;
-  while (!client.connected()) {
-    Serial.print("Attempting MQTT connection..."); 
-    // Create a random client ID
-    String clientId = "ESP8266Client-";
-    clientId += String(random(0xffff), HEX);
-    // Attempt to connect
-    if (client.connect(clientId.c_str())) {
-      Serial.print("My client connected id: ");
-      Serial.print(clientId);
-      Serial.print(", ");
-      Serial.println(value);
-      // Once connected, publish an announcement...
-      
-      sprintf(val_str, "%d", value);      // number to string
-      clientId.toCharArray(id_str, 40);   // C++ String to string
-      client.publish(topic, "My MQSS Client connected id: ");
-      client.publish(topic, id_str);
-      client.publish(topic, val_str);
-      
 
-        // ... and resubscribe
-      client.subscribe(topic);
-      client.subscribe(resp);
-    } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());   // -2 connect failed, -4 timeout
-      Serial.println(" try again in 5 seconds");
-           // Wait 5 seconds before retrying
-     delay(5000);
-    }
+void subscribe()
+{
+    myMqtt.subscribe("/" + String(MODULE_ID_1) + DO_TOPIC); //DO 1
+    myMqtt.subscribe("/" + String(MODULE_ID_2) + DO_TOPIC); //DO 2
+    myMqtt.subscribe("/" + String(MODULE_ID_3) + DO_TOPIC); //DO 3
+    myMqtt.subscribe("/" + String(MODULE_ID_4) + DO_TOPIC); //DO 4
+    Serial.println("in subscribe()");
+}
+
+
+void myConnectedCb() {
+  Serial.println("connected to MQTT server");
+  subscribe();
+}
+
+void myDisconnectedCb() {
+  Serial.println("disconnected. try to reconnect...");
+  delay(500);
+  myMqtt.connect();
+}
+
+void myPublishedCb() {
+  Serial.println("published.");
+}
+
+void myDataCb(String& topic, String& data) {  
+  if (topic == String("/"+String(MODULE_ID_1)+ DO_TOPIC))
+  {
+    if (data == String("1"))
+      digitalWrite(PIN_DO_1, HIGH);     
+    else
+      digitalWrite(PIN_DO_1, LOW);
+
+    Serial.print("Do 1:");
+    Serial.println(data);
   }
-}
 
-void setup() {
-  
-  pinMode(PIN_REL_1, OUTPUT); 
-  digitalWrite(PIN_REL_1, LOW);  // LED is OFF!
-  pinMode(PIN_REL_2, OUTPUT); 
-  digitalWrite(PIN_REL_2, LOW);  // LED is OFF!
-  pinMode(PIN_REL_3, OUTPUT); 
-  digitalWrite(PIN_REL_3, LOW);  // LED is OFF!
-  pinMode(PIN_REL_4, OUTPUT);
-  digitalWrite(PIN_REL_4, LOW);  // LED is OFF!
 
-  pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
-  digitalWrite(BUILTIN_LED, HIGH);  // LED is OFF!
-  Serial.begin(115200);
-  setup_wifi();
-  client.setServer(mqtt_server, mqtt_port);
-  client.setCallback(callback);
-}
+  if (topic == String("/"+String(MODULE_ID_2)+ DO_TOPIC))
+  {
+    if (data == String("1"))
+      digitalWrite(PIN_DO_2, HIGH);     
+    else
+      digitalWrite(PIN_DO_2, LOW);
 
-void loop() {
-  if (!client.connected()) {
-    reconnect();
+    Serial.print("Do 2:");
+    Serial.println(data);
   }
-  client.loop();
-   delay(5000);
+
+
+  if (topic == String("/"+String(MODULE_ID_3)+ DO_TOPIC))
+  {
+    if (data == String("1"))
+      digitalWrite(PIN_DO_3, HIGH);     
+    else
+      digitalWrite(PIN_DO_3, LOW);
+
+    Serial.print("Do 3:");
+    Serial.println(data);
+  }
+
+  if (topic == String("/"+String(MODULE_ID_4)+ DO_TOPIC))
+  {
+    if (data == String("1"))
+      digitalWrite(PIN_DO_4, HIGH);     
+    else
+      digitalWrite(PIN_DO_4, LOW);
+
+    Serial.print("Do 4:");
+    Serial.println(data);
+  }
+  
 }
+
+
+
+
