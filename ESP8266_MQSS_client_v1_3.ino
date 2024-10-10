@@ -39,7 +39,7 @@ To do:
 #define EIOTCLOUD_PASSWORD "wwwwwwwwwwww"
 
 // create MQTT object
-#define EIOT_CLOUD_ADDRESS "c80cb52f163b4effb8b38abc3fbc0ef0.s1.eu.hivemq.cloud"
+#define EIOT_CLOUD_ADDRESS "aaaaaaaaaaaaaaaaaaa.hivemq.cloud"
 
 #define DO_TOPIC        "/Sensor.Parameter1"
 
