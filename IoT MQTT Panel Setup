@@ -15,3 +15,7 @@ Off icon  red
 Icon size:  Medium
 QoS:  0
 
+Example panel Command / Resp:
+Panel Name: Command / Resp
+Topic: order / resp
+x Show received timestamp
