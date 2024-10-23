@@ -3,10 +3,10 @@ MQTT Relay switch with ESP8266. Remote connection without static IP.
 
 ## Project Description
 Remote measure of temperature and humidity and  
-remote control of 2 relais with Message Queuing Telemetry Transport (MQTT).
+remote control of 1 relay with Message Queuing Telemetry Transport (MQTT).
 
 ## Purpose
-Remote switching of 2 electrical devices.
+Remote switching of an electrical device, e.g. heating.
 
 ## Built With  
 ESP8266  
