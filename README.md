@@ -1,4 +1,4 @@
-# ESP8266_MQTT_relay_switch
+# ESP8266_MQTT_relay_switch_thermometer
 MQTT Relay switch with ESP8266. Remote connection without static IP.
 
 ## Project Description
