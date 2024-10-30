@@ -1,13 +1,13 @@
-//https://www.emqx.com/en/blog/esp8266-connects-to-the-public-mqtt-broker
-// working version. Contact error in DHT22!
+//https://www.emqx.com/en/blog/esp8266-connects-to-the-public-mqtt-broker Thanks!
+
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <DHT.h>
 
 // Replace with your network credentials
-const char *ssid =   "A1-3c0661";
-const char *password =  "l24fq7ae3wyh";
+const char *ssid =   "xxxxxxxxxxxxx";
+const char *password =  "yyyyyyyyyyyyyyy";
 
 // MQTT Broker settings
 const char *mqtt_broker = "broker.emqx.io";  // EMQX broker endpoint
@@ -88,7 +88,6 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
     message = message + (char)payload[i];
    }
     Serial.println(message);
-
     Serial.println("-----------------------");
 
      if( message.equals("rel1")) {
@@ -101,48 +100,17 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
  }
  if( message.equals("temp1")){
       client.publish(mqtt_response, String(temperature).c_str());
-  }
- //   client.publish(mqtt_response, message.c_str()); 
-    
+  }    
 }
 
 void loop() {
     if (!client.connected()) 
          connectToMQTTBroker();
     client.loop();
-
     
     temperature = dht.readTemperature();  //nemeri jinak ok
     Serial.println(temperature);
-  //  client.publish(mqtt_response, String(temperature).c_str());
-      
-
-    
+        
   delay(5000);
 }
 
-
-
-
-/*************
-  
-  // Read temperature and humidity
-  float humidity = dht.readHumidity();
-  float temperature = dht.readTemperature();
-
-  // Check if any readings failed
-  if (isnan(humidity) || isnan(temperature)) {
-    Serial.println("Failed to read from DHT sensor!");
-    return;
-  }
-
-  // Publish temperature and humidity to MQTT topic
-  String payload = "Temperature: " + String(temperature) + "°C  Humidity: " + String(humidity) + "%";
-  Serial.println("Publishing data: " + payload);
-  
-  client.publish(mqtt_topic, payload.c_str());
-
-  // Wait before sending the next reading
-  delay(2000);
-}
-*******************/
