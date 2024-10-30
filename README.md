@@ -11,7 +11,7 @@ Remote switching of an electrical device, e.g. heating.
 ## Built With  
 ESP8266  
 Relais JQC3F 5V DC  
-Thermometer DHT22 or DHT11 
+Thermometer DHT22 or DHT11  
 EMXQ MQTT Broker  
 Mobile MQTT Client: IoT MQTT Panel (Android)  
 PC MQTT Client: MQTT Explorer (Linux, Windows), MQTT.js  
